@@ -1,0 +1,88 @@
+---
+title: "Baby-Names"
+author: "Fanyi Zeng"
+date: "4/23/2022"
+output: github_document
+---
+
+Data source: http://hadley.github.io/babynames/
+
+Data description:
+year: double, Year of birth
+sex: character, Binary sex of the baby
+name: character, Name of the baby
+n: integer, Raw count
+prop: double, Proportion of total births for that year
+
+
+```{r install data}
+babynames <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-22/babynames.csv')
+```
+
+```{r load library, message=FALSE}
+library(tidyverse)
+```
+
+Let's see the top names of 1880.
+
+For girls, top 10 names were Mary, Anna, Emma, Elizabeth, Minnie, Margaret, Ida, Alice, Bertha, and Sarah.
+
+For boys, top 10 names were John, William, James, Charles, George, Frank, Joseph, Thomas, Henry, and Robert.
+
+The most enduring girls' name from 1880 to 2017 seems to be Emma. Boys' names are William and James.
+
+```{r girl 1880}
+babynames %>%
+  filter(year == "1880" & sex == "F") %>%
+  arrange(desc(n))
+babynames %>%
+  filter(year == "1880" & sex == "M") %>%
+  arrange(desc(n))
+```
+
+Let's see the top names of 2017.
+
+For girls, top 10 names were Emma, Olivia, Ava, Isabella, Sophia, Mia, Charlotte, Amelia, Evelyn, and Abigail. 
+
+For boys, top 10 names were Liam, Noah, William, James, Logan, Benjamin, Mason, Elijah, Oliver, and Jacob.
+
+```{r 2017}
+babynames %>%
+  filter(year == "2017" & sex == "F") %>%
+  arrange(desc(n))
+babynames %>%
+  filter(year == "2017" & sex == "M") %>%
+  arrange(desc(n))
+```
+
+The most popular names in 1800, Mary and Anna, largely decreased in popularity over the years. Emma being an enduring name, was both popular in 1800 and in 2017; it has experienced a gradual decline since 1800 and a revival since 2000. Olivia has also gained popularity around the same time since 2000.
+
+```{r girl trend}
+babynames %>%  
+  filter(name == "Mary"|name == "Anna") %>%
+  ggplot(aes(x=year, y=prop, color = name)) +
+  geom_point() +
+  geom_line()
+babynames %>%  
+  filter(name == "Emma"|name == "Olivia") %>%
+  ggplot(aes(x=year, y=prop, color=name)) +
+  geom_point() +
+  geom_line()
+```
+
+Similarly, John and William became less favorable over the years. Liam became more prevalent around 2000, followed by Noah. 
+
+```{r boy trend}
+babynames %>%  
+  filter(name == "John"|name == "William") %>%
+  ggplot(aes(x=year, y=prop, color = name)) +
+  geom_point() +
+  geom_line()
+babynames %>%  
+  filter(name == "Liam"|name == "Noah") %>%
+  ggplot(aes(x=year, y=prop, color=name)) +
+  geom_point() +
+  geom_line()
+```
+
+A general trend is that, names that very extremely common (representing a large %) in 1800 were much less dominant in 2017, perhaps because the population has grown more and more diverse in terms of national origin, race/ethnicity, religious belief, etc., which are factors that might potentially affect how people choose to name their babies.
